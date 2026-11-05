@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en-AU"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Coffeebreak Musician Bookings</title><link rel="icon" href="cb-logo.jpg">
+<style>
+
+:root{--p:#e8559a;--pd:#b8336f;--pl:#ffe3f0;--pb:#fff5fa;--ink:#3a1f2c;--mut:#8a6577;--ok:#2e8b57;--warn:#d9822b;--bad:#c62828}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--pb);color:var(--ink);font-size:15px}
+header{background:linear-gradient(135deg,#ff8cc2,var(--p));color:#fff;display:flex;align-items:center;gap:12px;padding:10px 16px;position:sticky;top:0;z-index:5}
+header img{width:46px;height:46px;border-radius:50%;border:2px solid #fff;object-fit:cover}header h1{font-size:20px;margin:0}header small{display:block;font-weight:400;opacity:.9;font-size:12px}
+nav{display:flex;flex-wrap:wrap;gap:4px;padding:8px 12px;background:#fff;border-bottom:2px solid var(--pl);position:sticky;top:66px;z-index:4}
+nav button{background:var(--pl);color:var(--pd);border:0;border-radius:18px;padding:7px 12px;font-weight:600;cursor:pointer}nav button.on{background:var(--p);color:#fff}
+main{max-width:1180px;margin:0 auto;padding:12px}.pane{display:none}.pane.on{display:block}
+.card{background:#fff;border:1px solid #f6c5dc;border-radius:14px;padding:14px;margin:10px 0;box-shadow:0 2px 6px #e8559a14}
+h2{color:var(--pd);margin:4px 0 10px;font-size:18px}h3{margin:6px 0;font-size:16px;color:var(--pd)}
+label{display:block;font-size:12px;color:var(--mut);margin:6px 0 2px}input,select,textarea{width:100%;padding:8px;border:1px solid #f0b5d0;border-radius:8px;font:inherit;background:#fff}
+textarea{min-height:60px}.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px}
+button{background:var(--p);color:#fff;border:0;border-radius:9px;padding:8px 12px;font-weight:600;cursor:pointer;font:inherit;font-weight:600}button:hover{background:var(--pd)}
+button.ghost{background:#fff;color:var(--pd);border:1px solid var(--p)}button.sm{padding:4px 8px;font-size:12px}button.ok{background:var(--ok)}button.bad{background:var(--bad)}button.warn{background:var(--warn)}
+button:disabled{opacity:.45;cursor:not-allowed}
+.muted{color:var(--mut);font-size:13px}.pill{display:inline-block;background:var(--pl);color:var(--pd);border-radius:12px;padding:2px 8px;font-size:12px;margin:2px}
+.sample{background:#fff3c4;color:#7a5b00;border:1px dashed #d9b400;border-radius:8px;padding:6px 10px;font-size:13px;margin:6px 0}
+.days{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px}.day{min-width:74px;text-align:center;border:1px solid #f0b5d0;border-radius:10px;padding:6px;cursor:pointer;background:#fff}
+.day.on{background:var(--p);color:#fff}.day b{display:block;font-size:18px}.day.none{opacity:.45}
+.slots{display:flex;flex-wrap:wrap;gap:6px}.slot{background:#fff;color:var(--pd);border:1px solid var(--p);padding:6px 10px;border-radius:8px}.slot.on{background:var(--p);color:#fff}
+.doc{border-top:1px dashed #f0b5d0;padding-top:8px;margin-top:8px}table{width:100%;border-collapse:collapse}td,th{padding:6px;border-bottom:1px solid #fbd9e8;text-align:left;font-size:14px;vertical-align:top}
+.st-booked{color:var(--pd)}.st-checked-in{color:var(--ok);font-weight:700}.st-done{color:#555}.st-no-show{color:var(--bad);font-weight:700}.st-cancelled{color:#999;text-decoration:line-through}
+#toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:10px;display:none;z-index:20;max-width:90%}
+.chat{height:380px;overflow-y:auto;background:var(--pb);border:1px solid #f0b5d0;border-radius:12px;padding:10px}
+.msg{max-width:82%;margin:6px 0;padding:8px 11px;border-radius:12px;white-space:pre-wrap;line-height:1.35}.msg.bot{background:#fff;border:1px solid #f6c5dc}.msg.me{background:var(--p);color:#fff;margin-left:auto}
+.msg.alert{background:#ffe1e1;border:2px solid var(--bad);color:#7a0000;font-weight:600}.quick{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}
+.msgbox{background:var(--pb);border:1px solid #f0b5d0;border-radius:10px;padding:8px;margin:6px 0;white-space:pre-wrap;font-size:13px}
+.notactive{background:#eee;border:2px dashed #999;border-radius:10px;padding:10px;color:#555}
+.stat{display:inline-block;background:var(--pl);border-radius:10px;padding:8px 12px;margin:3px;text-align:center}.stat b{display:block;font-size:20px;color:var(--pd)}
+footer{background:#fff;border-top:3px solid var(--pl);padding:14px;font-size:12px;color:var(--mut);margin-top:20px}footer .in{max-width:1180px;margin:0 auto;display:flex;gap:12px;align-items:flex-start}
+footer img{width:40px;height:40px;border-radius:50%}footer a{color:var(--pd);font-weight:600}
+.cfgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}.cfi{border:1px solid #f6c5dc;border-radius:12px;padding:10px;background:var(--pb)}
+.cfh{display:flex;gap:8px;align-items:center}.cfic{font-size:28px}.cfopts{grid-template-columns:1fr 1fr;gap:4px}.cfbuy{display:flex;justify-content:space-between;align-items:center;margin-top:8px}.cfprice{font-size:18px;color:var(--pd)}
+.cfbig{font-size:20px;padding:12px 26px;border-radius:14px}.cflink{background:var(--pl);border-radius:10px;padding:8px;margin:6px 0}.cfst{font-weight:700;text-transform:capitalize}.cfst-new{color:var(--pd)}.cfst-making{color:var(--warn)}.cfst-ready{color:var(--ok)}.cfst-collected{color:#555}.cfst-cancelled{color:#999;text-decoration:line-through}
+.cfcount{display:inline-block;background:#fff;color:var(--pd);border-radius:10px;padding:0 6px;margin-left:3px;font-size:12px}nav button.on .cfcount{color:var(--p)}
+@media(min-width:641px){nav button{padding:6px 10px;font-size:13px}}
+@media(max-width:640px){table{display:block;overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch}header{position:relative}nav{top:0;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin}nav button{flex:0 0 auto;white-space:nowrap}}
+@media(max-width:640px){.cfopts{grid-template-columns:1fr 1fr}td,th{font-size:13px;padding:4px}.cfbig{width:100%}}
+.hide{display:none!important}@media(max-width:640px){header h1{font-size:16px}nav{top:66px}.msg{max-width:95%}}
+@media print{header,nav,footer,button{display:none!important}}
+
+.ex{border:1px solid #f6c5dc;border-radius:12px;padding:10px;background:var(--pb);margin:8px 0}
+.disc{background:var(--pl);border-radius:10px;padding:10px;font-size:13px}
+</style></head><body>
+<header><img src="cb-logo.jpg" alt="Coffeebreak logo"><h1>Coffeebreak Musician Bookings<small>Gigs, lessons, studio time and a coffee cart</small></h1></header>
+<nav id="nav">
+<button data-p="find" class="on">Book</button><button data-p="coffee">&#9749; Coffee <span class="cfcount" id="cfCount">0</span></button><button data-p="gigs">Book a gig</button><button data-p="mine">My bookings</button><button data-p="wait">Waitlist</button><button data-p="dash">Musician dashboard</button><button data-p="setup">Setup</button><button data-p="about">About</button>
+</nav>
+<main>
+<div class="sample" id="sampleBanner">SAMPLE DATA: the studios, musicians and bookings preloaded here are made up for demonstration. Change them in Setup, or use "Clear sample data".</div>
+
+<section class="pane on" id="find">
+<div class="card"><h2>Book a lesson or studio time</h2>
+<div class="row"><div><label>Search studio, musician or suburb</label><input id="fq" placeholder="e.g. Newcastle, guitar, studio"></div>
+<div><label>Booking type</label><select id="ftype"></select></div></div>
+<div id="venueList"></div></div>
+<div class="card hide" id="bookCard"><h2 id="bookTitle">Book</h2>
+<div class="row"><div><label>Musician</label><select id="bperson"></select></div><div><label>Booking type</label><select id="btype"></select></div>
+<div style="display:flex;align-items:flex-end"><button id="nextBtn" style="width:100%" type="button">Auto-assign next available</button></div></div>
+<div id="feeBox" class="msgbox"></div><h3 style="margin-top:12px">Live availability</h3><div class="days" id="days"></div><div id="slotArea"></div>
+<div id="bookForm" class="hide"><h3>Your details: <span id="chosen"></span></h3>
+<div class="row"><div><label>Your name *</label><input id="pname"></div><div><label>Mobile *</label><input id="pphone" placeholder="04xx xxx xxx"></div><div><label>Email</label><input id="pemail" type="email"></div><div><label>Instrument or service</label><input id="x_inst" placeholder="e.g. guitar, vocals, recording"></div><div><label>Experience level</label><select id="x_level"><option value="">Choose</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option><option>Gigging</option></select></div></div>
+<label>Anything the musician should know? (optional)</label><input id="pnote" placeholder="e.g. songs you want to learn">
+<label><input type="checkbox" id="pconsent" style="width:auto"> I agree to receive booking reminders and to the studio's privacy policy.</label>
+<p><button id="confirmBook" type="button">Book instantly</button> <button class="ghost" id="cancelPick" type="button">Back</button></p></div>
+<div id="bookDone"></div></div>
+</section>
+
+<section class="pane" id="coffee">
+<div class="card"><h2>&#9749; Coffee cart</h2><p class="muted">Order a coffee for your lesson, rehearsal or studio session. Choose size, milk and sugar, add to cart, then press Buy it now. Prices in AUD.</p>
+<div id="cfLinkNote" class="msgbox hide"></div><div class="cfgrid" id="cfMenu"></div></div>
+<div class="card"><h2>Your cart</h2><div id="cfCart"></div><p style="text-align:right"><button id="cfBuy" class="cfbig" type="button" disabled>Buy it now</button></p></div>
+<div class="card hide" id="cfCheckout"><h2>Checkout</h2>
+<div class="row"><div><label>Pickup tied to</label><select id="cflink"><option value="appt">My booking</option><option value="own">Choose a time myself</option></select></div></div>
+<div id="cfApptBox"><div class="row"><div><label>Your mobile, email or booking ref</label><input id="cfq" placeholder="e.g. 0400000001 or CBXXXXX"></div><div style="display:flex;align-items:flex-end"><button class="ghost" id="cffind" type="button">Find my booking</button></div></div>
+<div class="row"><div><label>Booking</label><select id="cfappt"><option value="">Find your booking first</option></select></div></div></div>
+<div id="cfwhenBox" class="row"><div><label>When should it be ready?</label><select id="cfwhen"><option value="before">When I arrive (10 min before my booking)</option><option value="at">At my booking time</option><option value="after">Straight after my booking</option></select></div></div>
+<div id="cfOwnBox" class="hide"><div class="row"><div><label>Studio</label><select id="cfvenue"></select></div><div><label>Pickup date</label><input type="date" id="cfdate"></div><div><label>Pickup time</label><input type="time" id="cftime" step="300"></div></div></div>
+<p id="cfPickupLine"></p>
+<div class="row"><div><label>Name for the order *</label><input id="cfname"></div><div><label>Mobile</label><input id="cfphone" placeholder="04xx xxx xxx"></div><div><label>Note for the barista</label><input id="cfnote" placeholder="e.g. extra hot"></div></div>
+<h3>Payment</h3><div class="quick"><label style="margin:0"><input type="radio" name="cfpay" value="payid" checked style="width:auto"> Pay by PayID (Teachers Mutual Bank): darkokaz@gmx.com</label><label style="margin:0"><input type="radio" name="cfpay" value="counter" style="width:auto"> Pay at the counter</label></div>
+<div id="cfPayIdBox" class="msgbox">Pay by PayID (Teachers Mutual Bank): <b>darkokaz@gmx.com</b>. After you press Buy it now you get the amount and an order reference to use in your banking app. No card details are taken in this app.</div>
+<p><b>Total: <span id="cfCoTotal">$0.00</span> AUD</b></p>
+<p><button id="cfPlace" class="cfbig" type="button">Buy it now</button></p></div>
+<div id="cfDoneWrap"><div id="cfDone"></div></div>
+<div class="card"><h2>Staff: coffee order queue</h2><p class="muted">For the front desk and the barista. Orders are sorted by pickup time. Mark them ready when made, then collected.</p>
+<div class="row"><div><label>Studio</label><select id="cfqvenue"></select></div><div><label>Day</label><input type="date" id="cfqday"></div><div><label>Show</label><select id="cfqshow"><option value="open">Open orders (new, making, ready)</option><option value="all">All orders</option><option value="collected">Collected</option><option value="cancelled">Cancelled</option></select></div><div style="display:flex;align-items:flex-end"><button class="ghost" id="cfqtoday" type="button">Today</button></div></div>
+<div id="cfqstats"></div><div id="cfqlist"></div></div>
+</section>
+<section class="pane" id="gigs"><div class="card"><h2>Book a musician for a gig or event</h2><p class="muted">Get an instant quote from the musician's hourly rate, then send a request. Deposits are paid by PayID once the gig is confirmed. No card details are taken.</p><div class="row"><div><label>Studio or agency</label><select id="gvenue"></select></div><div><label>Musician or band</label><select id="gperson"></select></div><div><label>Event type</label><select id="gkind"></select></div><div><label>Date</label><input type="date" id="gdate"></div><div><label>Start time</label><input type="time" id="gstart" value="19:00"></div><div><label>Hours</label><input type="number" id="ghours" min="1" max="12" value="2"></div><div><label>Venue address</label><input id="gplace"></div><div><label>Guests</label><input type="number" id="gguests" min="0"></div></div><div class="row"><div><label>Your name *</label><input id="gname"></div><div><label>Mobile *</label><input id="gphone" placeholder="04xx xxx xxx"></div><div><label>Email</label><input id="gemail" type="email"></div><div><label>Song requests or notes</label><input id="gnotes"></div></div><p id="gquote" class="msgbox"></p><p><button id="gadd" type="button">Send gig request</button></p><div id="gDone"></div></div><div class="card"><h2>My gig requests</h2><div class="row"><div><label>Mobile or gig ref</label><input id="gq"></div><div style="display:flex;align-items:flex-end"><button class="ghost" id="gfind" type="button">Find</button></div></div><div id="glist"></div></div></section>
+<section class="pane" id="mine"><div class="card"><h2>My bookings</h2>
+<div class="row"><div><label>Mobile or email used when booking</label><input id="mq"></div><div style="display:flex;align-items:flex-end"><button id="mfind" type="button">Find my bookings</button></div></div>
+<div id="mres"></div></div></section>
+
+<section class="pane" id="wait"><div class="card"><h2>Smart waitlist</h2><p class="muted">Join the waitlist for a studio. When someone cancels, the first matching person is booked into the freed time automatically.</p>
+<div class="row"><div><label>Studio</label><select id="wvenue"></select></div><div><label>Musician</label><select id="wperson"></select></div><div><label>Booking type</label><select id="wtype"></select></div><div><label>From</label><input type="date" id="wfrom"></div><div><label>To</label><input type="date" id="wto"></div></div>
+<div class="row"><div><label>Name *</label><input id="wname"></div><div><label>Mobile *</label><input id="wphone"></div><div><label>Email</label><input id="wemail"></div></div>
+<p><button id="wadd" type="button">Join waitlist</button></p><div id="wlist"></div></div></section>
+
+<section class="pane" id="dash"><div class="card"><h2>Musician dashboard: bookings for the day</h2>
+<div class="row"><div><label>Studio</label><select id="dvenue"></select></div><div><label>Day</label><input type="date" id="dday"></div><div style="display:flex;align-items:flex-end"><button class="ghost" id="dtoday" type="button">Today</button></div></div>
+<div id="dstats"></div><div id="dlist"></div></div><div class="card"><h2>Gig requests</h2><p class="muted">Requests for the studio chosen above. Confirm or decline, then mark the deposit paid.</p><div id="gigStaff"></div></div></section>
+
+<section class="pane" id="setup"><div class="card"><h2>Setup</h2>
+<div class="row"><div><label>Studio</label><select id="svenue"></select></div><div style="display:flex;align-items:flex-end"><button class="ghost" id="snew" type="button">Add a new studio</button></div></div>
+<div id="sform"></div></div>
+<div class="card"><h2>Backup &amp; sample data</h2><p class="muted">Everything is saved in this browser only. Download a backup to keep it safe or move it to another device.</p>
+<p><button id="bexp" type="button">Download backup (.json)</button> <label class="ghost" style="display:inline-block"><input type="file" id="bimp" accept=".json,application/json" style="width:auto"> Restore backup</label></p>
+<p><button class="bad" id="bclear" type="button">Clear sample data</button> <button class="ghost" id="breset" type="button">Reload sample data</button></p></div></section>
+
+<section class="pane" id="about"><div class="card"><h2>About Coffeebreak Musician Bookings</h2>
+<p>Coffeebreak Musician Bookings is for music teachers, studios, rehearsal rooms, bands and solo musicians. Book lessons and studio time with live availability, request a gig with an instant quote, and keep a smart waitlist. Musicians get a day dashboard, gig requests and a coffee order queue. Everything runs in your web browser and is saved on your own device.</p>
+<p>Coffee cart: order a coffee, see your cart total and press Buy it now. Pay by PayID (Teachers Mutual Bank): darkokaz@gmx.com, or pay at the counter. This app takes no card payments.</p>
+<div class="disc"><p><b>Disclaimer and rights.</b> © Karen (Coffeebreak). Karen keeps all rights to her products, designs, apps, the Coffeebreak name and logo. Buyers may resell physical items they bought from Coffeebreak, but may not copy, reproduce or make their own versions of Coffeebreak products, designs or apps. All third-party trademarks and brand names belong to their respective owners and are mentioned only for reference; Coffeebreak claims no ownership of them and is not affiliated with or endorsed by them.</p>
+<p>Quotes are estimates from the hourly rates set in Setup; the musician confirms the final price. The sample studios, musicians and bookings are made up. Data stays in this browser unless you export it. Provided "as is" without warranty.</p></div></div></section>
+</main>
+<footer><div class="in"><img src="cb-logo.jpg" alt="Coffeebreak logo"><div>Coffeebreak Musician Bookings. © Karen (Coffeebreak). Karen keeps all rights to her products, designs, apps, name and logo. Buyers may resell physical items but may not copy them. Third-party trademarks belong to their owners.<br>Check out <a href="https://www.tesla.com" target="_blank" rel="noopener">Tesla</a> and <a href="https://www.starlink.com" target="_blank" rel="noopener">Starlink</a>.</div></div></footer>
+<div id="toast"></div>
+<script src="config.js"></script><script src="app.js"></script><script src="extras.js"></script><script src="coffee.js"></script>
+</body></html>
